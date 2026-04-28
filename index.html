@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Anil Kumar Jha — Shopify Developer</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink: #0e0e0e;
+    --ink2: #3a3a3a;
+    --ink3: #888;
+    --bg: #f5f2ec;
+    --card: #fff;
+    --accent: #1a4a2e;
+    --accent2: #2e7d52;
+    --accent-light: #d4ede0;
+    --accent-pale: #edf7f2;
+    --border: #ddd8ce;
+    --tag-bg: #e8f4ee;
+    --tag-text: #1a4a2e;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    font-size: 16px;
+    line-height: 1.7;
+  }
+
+  /* NAV */
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(245,242,236,0.92);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 56px;
+  }
+  .nav-logo {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 1.1rem;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    text-decoration: none;
+  }
+  .nav-links {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+  }
+  .nav-links a {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--ink2);
+    text-decoration: none;
+    letter-spacing: 0.01em;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--accent2); }
+
+  /* HERO */
+  .hero {
+    min-height: 92vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    gap: 4rem;
+    padding: 6rem 5rem 4rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -120px;
+    right: -80px;
+    width: 540px;
+    height: 540px;
+    border-radius: 50%;
+    background: radial-gradient(circle, #c5e8d8 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-eyebrow {
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent2);
+    margin-bottom: 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .hero-eyebrow::before {
+    content: '';
+    display: inline-block;
+    width: 28px;
+    height: 2px;
+    background: var(--accent2);
+  }
+  .hero h1 {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: clamp(2.5rem, 5vw, 4.5rem);
+    line-height: 1.05;
+    letter-spacing: -0.035em;
+    color: var(--ink);
+    margin-bottom: 1.5rem;
+  }
+  .hero h1 em {
+    font-style: normal;
+    color: var(--accent2);
+  }
+  .hero-desc {
+    font-size: 1.05rem;
+    color: var(--ink2);
+    line-height: 1.75;
+    max-width: 480px;
+    margin-bottom: 2.5rem;
+  }
+  .hero-cta {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  .btn-primary {
+    display: inline-block;
+    background: var(--accent);
+    color: #fff;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    padding: 0.75rem 1.75rem;
+    border-radius: 50px;
+    text-decoration: none;
+    letter-spacing: 0.01em;
+    transition: background 0.2s, transform 0.2s;
+  }
+  .btn-primary:hover { background: var(--accent2); transform: translateY(-1px); }
+  .btn-outline {
+    display: inline-block;
+    background: transparent;
+    color: var(--ink);
+    border: 1.5px solid var(--border);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    padding: 0.75rem 1.75rem;
+    border-radius: 50px;
+    text-decoration: none;
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .btn-outline:hover { border-color: var(--accent2); color: var(--accent2); }
+
+  /* Hero stat cards */
+  .hero-right {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    position: relative;
+    z-index: 1;
+  }
+  .stat-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 1.75rem 1.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .stat-card.accent-card {
+    background: var(--accent);
+    border-color: var(--accent);
+    grid-column: 1 / -1;
+  }
+  .stat-card.accent-card .stat-num,
+  .stat-card.accent-card .stat-label,
+  .stat-card.accent-card .stat-desc {
+    color: #fff;
+  }
+  .stat-card.accent-card .stat-label { color: rgba(255,255,255,0.65); }
+  .stat-num {
+    font-family: 'Syne', sans-serif;
+    font-size: 2.75rem;
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    color: var(--ink);
+    line-height: 1;
+    margin-bottom: 0.3rem;
+  }
+  .stat-label {
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink3);
+  }
+  .stat-desc {
+    font-size: 0.875rem;
+    color: var(--ink2);
+    margin-top: 0.5rem;
+    line-height: 1.5;
+  }
+
+  /* SECTION LAYOUT */
+  section {
+    padding: 5rem 5rem;
+  }
+  .section-label {
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent2);
+    margin-bottom: 0.75rem;
+  }
+  .section-title {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(1.75rem, 3vw, 2.75rem);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    color: var(--ink);
+    margin-bottom: 3rem;
+    max-width: 560px;
+  }
+
+  /* EXPERIENCE */
+  #experience { background: var(--card); }
+  .exp-timeline {
+    position: relative;
+    padding-left: 2rem;
+  }
+  .exp-timeline::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 8px;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(to bottom, var(--accent2) 0%, var(--accent-light) 100%);
+  }
+  .exp-item {
+    position: relative;
+    margin-bottom: 3rem;
+    padding-bottom: 3rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .exp-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+  .exp-dot {
+    position: absolute;
+    left: -2.45rem;
+    top: 6px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--accent2);
+    border: 3px solid var(--bg);
+  }
+  .exp-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 0.25rem;
+  }
+  .exp-company {
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent2);
+    margin-bottom: 0.25rem;
+  }
+  .exp-role {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--ink);
+    letter-spacing: -0.02em;
+  }
+  .exp-period {
+    font-size: 0.82rem;
+    color: var(--ink3);
+    white-space: nowrap;
+    background: var(--bg);
+    padding: 0.3rem 0.85rem;
+    border-radius: 50px;
+    border: 1px solid var(--border);
+    margin-top: 4px;
+  }
+  .exp-bullets {
+    margin-top: 1rem;
+    padding-left: 1.25rem;
+  }
+  .exp-bullets li {
+    font-size: 0.95rem;
+    color: var(--ink2);
+    margin-bottom: 0.5rem;
+    line-height: 1.6;
+  }
+  .exp-bullets li::marker { color: var(--accent2); }
+
+  /* STORES */
+  #stores { background: var(--bg); }
+  .stores-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+  }
+  .store-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.5rem;
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+  }
+  .store-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.08);
+    border-color: var(--accent-light);
+  }
+  .store-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: var(--accent-pale);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 0.5rem;
+  }
+  .store-icon svg { width: 20px; height: 20px; }
+  .store-name {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--ink);
+  }
+  .store-url {
+    font-size: 0.8rem;
+    color: var(--ink3);
+  }
+  .store-arrow {
+    margin-top: auto;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--accent2);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  /* SKILLS */
+  #skills { background: var(--accent); }
+  #skills .section-label { color: rgba(255,255,255,0.6); }
+  #skills .section-title { color: #fff; }
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 18px;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+  .skill-group {
+    background: rgba(255,255,255,0.05);
+    padding: 2rem 1.75rem;
+  }
+  .skill-group-title {
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 1.25rem;
+  }
+  .skill-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .skill-tag {
+    font-size: 0.82rem;
+    font-weight: 400;
+    color: rgba(255,255,255,0.85);
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.12);
+    padding: 0.3rem 0.85rem;
+    border-radius: 50px;
+  }
+
+  /* EDUCATION */
+  #education { background: var(--card); }
+  .edu-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+  }
+  .edu-card {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.75rem;
+  }
+  .edu-degree {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 0.35rem;
+  }
+  .edu-school {
+    font-size: 0.875rem;
+    color: var(--ink2);
+    margin-bottom: 0.75rem;
+    line-height: 1.5;
+  }
+  .edu-meta {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+  .edu-pill {
+    font-size: 0.78rem;
+    font-weight: 500;
+    background: var(--accent-pale);
+    color: var(--accent);
+    border: 1px solid var(--accent-light);
+    padding: 0.25rem 0.75rem;
+    border-radius: 50px;
+  }
+
+  /* CONTACT */
+  #contact { background: var(--bg); }
+  .contact-wrap {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+  }
+  .contact-info h2 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(1.75rem, 3vw, 2.5rem);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    color: var(--ink);
+    margin-bottom: 1rem;
+  }
+  .contact-info p {
+    font-size: 1rem;
+    color: var(--ink2);
+    margin-bottom: 2rem;
+  }
+  .contact-links {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  .contact-link {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.95rem;
+    color: var(--ink2);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .contact-link:hover { color: var(--accent2); }
+  .contact-link-icon {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .contact-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 2.5rem 2rem;
+    text-align: center;
+  }
+  .contact-avatar {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: #fff;
+    font-family: 'Syne', sans-serif;
+    font-size: 1.6rem;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.25rem;
+  }
+  .contact-card h3 {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: var(--ink);
+    letter-spacing: -0.02em;
+    margin-bottom: 0.25rem;
+  }
+  .contact-card .tagline {
+    font-size: 0.875rem;
+    color: var(--ink3);
+    margin-bottom: 1.75rem;
+  }
+  .contact-card .langs {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-bottom: 1.75rem;
+  }
+  .lang-pill {
+    font-size: 0.78rem;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--ink2);
+    padding: 0.25rem 0.85rem;
+    border-radius: 50px;
+  }
+
+  /* FOOTER */
+  footer {
+    background: var(--ink);
+    color: rgba(255,255,255,0.5);
+    text-align: center;
+    padding: 2rem;
+    font-size: 0.82rem;
+  }
+  footer a { color: rgba(255,255,255,0.7); text-decoration: none; }
+
+  @media (max-width: 900px) {
+    .hero { grid-template-columns: 1fr; padding: 4rem 2rem 3rem; }
+    .hero::before { display: none; }
+    section { padding: 4rem 2rem; }
+    .stores-grid { grid-template-columns: 1fr 1fr; }
+    .skills-grid { grid-template-columns: 1fr 1fr; }
+    .edu-grid { grid-template-columns: 1fr; }
+    .contact-wrap { grid-template-columns: 1fr; gap: 2rem; }
+    nav { padding: 0 1.25rem; }
+    .nav-links { gap: 1.25rem; }
+  }
+  @media (max-width: 600px) {
+    .stores-grid { grid-template-columns: 1fr; }
+    .skills-grid { grid-template-columns: 1fr; }
+    .hero-right { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="#">AKJ</a>
+  <ul class="nav-links">
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#stores">Stores</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-left">
+    <p class="hero-eyebrow">Shopify Developer</p>
+    <h1>Anil Kumar<br><em>Jha</em></h1>
+    <p class="hero-desc">Results-driven developer with expertise in Shopify, PHP, and WordPress. Delivering performant, scalable eCommerce experiences — 65+ live stores shipped.</p>
+    <div class="hero-cta">
+      <a href="mailto:anilkjhadeveloper@gmail.com" class="btn-primary">Get in touch</a>
+      <a href="https://www.linkedin.com/in/aniljha012/" target="_blank" class="btn-outline">LinkedIn ↗</a>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="stat-card">
+      <div class="stat-num">65+</div>
+      <div class="stat-label">Live Stores</div>
+      <div class="stat-desc">Built & deployed for dropshipping and private label clients</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num">8.06</div>
+      <div class="stat-label">SGPA</div>
+      <div class="stat-desc">B.Tech Computer Science, R.G.P.V. University</div>
+    </div>
+    <div class="stat-card accent-card">
+      <div class="stat-num">4 Roles</div>
+      <div class="stat-label">Professional Evolution</div>
+      <div class="stat-desc">
+        PHP Dev Intern → Jr. Shopify Dev → System Developer → Growth Engineer. → Full-Stack Shopify & ECommerce Growth Engineer
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <p class="section-label">Career</p>
+  <h2 class="section-title">Professional Experience</h2>
+  <div class="exp-timeline">
+
+    <div class="exp-item">
+        <div class="exp-dot"></div>
+        <div class="exp-header">
+            <div>
+                <p class="exp-company">Aurous Consultancy</p>
+                <p class="exp-role">Full-Stack Shopify & ECommerce Growth Engineer</p>
+            </div>
+            <span class="exp-period">March 2025 — Present</span>
+        </div>
+        <ul class="exp-bullets">
+            <li><strong>Full-Stack Shopify Development:</strong> Architecting custom Shopify solutions using Liquid, JavaScript, and Tailwind CSS to build high-converting, scalable theme sections and complex API integrations.</li>
+            <li><strong>Growth & Marketing Operations:</strong> Managing end-to-end digital marketing funnels across Meta, TikTok, and Pinterest Ads; bridging the gap between technical infrastructure and performance marketing to maximize ROI.</li>
+            <li><strong>Organic Visibility & Technical SEO:</strong> Spearheading advanced SEO audits and implementing JSON-LD Schema markup, resulting in enhanced search engine rankings and lower customer acquisition costs (CAC).</li>
+            <li><strong>Supply Chain Automation:</strong> Streamlining dropshipping workflows by integrating AliExpress and DSers, automating product sourcing and fulfillment logistics for international markets (US/Europe).</li>
+            <li><strong>Performance Engineering:</strong> Optimizing Core Web Vitals and server-side performance to ensure sub-2-second load times, significantly reducing bounce rates during high-traffic scaling phases.</li>
+        </ul>
+    </div>
+    
+    <div class="exp-item">
+      <div class="exp-dot"></div>
+      <div class="exp-header">
+        <div>
+          <p class="exp-company">Zreyas Agrotech Private Limited</p>
+          <p class="exp-role">E-commerce System Developer</p>
+        </div>
+        <span class="exp-period">July 2025 — April 2025</span>
+      </div>
+      <ul class="exp-bullets">
+        <li>Built and customized Shopify sections, templates, and components using Liquid and frontend technologies.</li>
+        <li>Implemented custom search functionality and executed complete Shopify SEO — both technical and on-page — to improve discoverability and organic performance.</li>
+        <li>Worked across backend, frontend, and checkout optimization for better performance and conversion rates.</li>
+        <li>Integrated apps, schema markup, and handled ongoing store maintenance and enhancements.</li>
+      </ul>
+    </div>
+
+    <div class="exp-item">
+      <div class="exp-dot"></div>
+      <div class="exp-header">
+        <div>
+          <p class="exp-company">Pixel Oracle Studios</p>
+          <p class="exp-role">Junior Shopify Developer</p>
+        </div>
+        <span class="exp-period">Apr 2025 — Jul 2025</span>
+      </div>
+      <ul class="exp-bullets">
+        <li>Worked on Shopify-based eCommerce store development, customization, and product management.</li>
+        <li>Responsible for store setup, theme customization, and app integrations including Printful, CJ Dropshipping, DSers, and AliExpress.</li>
+        <li>Built and delivered 65+ Shopify stores for dropshipping and private label clients.</li>
+        <li>Gained deep expertise in Shopify Liquid, store optimization, and app configuration.</li>
+      </ul>
+    </div>
+
+    <div class="exp-item">
+      <div class="exp-dot"></div>
+      <div class="exp-header">
+        <div>
+          <p class="exp-company">Roxston IT Solutions</p>
+          <p class="exp-role">PHP & WordPress Developer Intern</p>
+        </div>
+        <span class="exp-period">Oct 2024 — Apr 2025</span>
+      </div>
+      <ul class="exp-bullets">
+        <li>Worked on a live news portal project as backend developer using PHP, handling JSON-based data exchange.</li>
+        <li>Built strong foundations in server-side programming, API handling, and database interactions.</li>
+        <li>Contributed to WordPress development — theme customization and plugin integration for client projects.</li>
+      </ul>
+    </div>
+
+  </div>
+</section>
+
+<!-- LIVE STORES -->
+<section id="stores">
+  <p class="section-label">Portfolio</p>
+  <h2 class="section-title">Sample Live Stores</h2>
+  <div class="stores-grid">
+    <a href="https://healthyfly.in/" target="_blank" class="store-card">
+      <div class="store-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#1a4a2e" stroke-width="1.8"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      </div>
+      <p class="store-name">Healthyfly</p>
+      <p class="store-url">healthyfly.in</p>
+      <p class="store-arrow">Visit store →</p>
+    </a>
+    <a href="https://unifiedvision.store/" target="_blank" class="store-card">
+      <div class="store-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#1a4a2e" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20"/></svg>
+      </div>
+      <p class="store-name">Unified Vision</p>
+      <p class="store-url">unifiedvision.store</p>
+      <p class="store-arrow">Visit store →</p>
+    </a>
+    <a href="https://dudidosa.com/" target="_blank" class="store-card">
+      <div class="store-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#1a4a2e" stroke-width="1.8"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+      </div>
+      <p class="store-name">Dudi Dosa</p>
+      <p class="store-url">dudidosa.com</p>
+      <p class="store-arrow">Visit store →</p>
+    </a>
+    <a href="https://voamanga.com/" target="_blank" class="store-card">
+      <div class="store-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#1a4a2e" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+      </div>
+      <p class="store-name">Voa Manga</p>
+      <p class="store-url">voamanga.com</p>
+      <p class="store-arrow">Visit store →</p>
+    </a>
+    <a href="https://koart-fightgear.de/" target="_blank" class="store-card">
+      <div class="store-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#1a4a2e" stroke-width="1.8"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+      </div>
+      <p class="store-name">Koart Fightgear</p>
+      <p class="store-url">koart-fightgear.de</p>
+      <p class="store-arrow">Visit store →</p>
+    </a>
+    <a href="https://romeandzah.com.au/" target="_blank" class="store-card">
+      <div class="store-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#1a4a2e" stroke-width="1.8"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+      </div>
+      <p class="store-name">Rome & Zah</p>
+      <p class="store-url">romeandzah.com.au</p>
+      <p class="store-arrow">Visit store →</p>
+    </a>
+    <a href="https://voofvoof.com" target="_blank" class="store-card">
+      <div class="store-icon">
+       <svg viewBox="0 0 24 24" fill="none" stroke="#1a4a2e" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M11 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0zM19 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0zM7 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0zM23 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0zM15 17a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
+</svg>
+      </div>
+      <p class="store-name">VoofVoof</p>
+      <p class="store-url">voofvoof.com/</p>
+      <p class="store-arrow">Visit store →</p>
+    </a>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills">
+  <p class="section-label">Expertise</p>
+  <h2 class="section-title">Skills & Technologies</h2>
+  <div class="skills-grid">
+    <div class="skill-group">
+      <p class="skill-group-title">E-commerce</p>
+      <div class="skill-tags">
+        <span class="skill-tag">Shopify</span>
+        <span class="skill-tag">WooCommerce</span>
+        <span class="skill-tag">Shopify Liquid</span>
+        <span class="skill-tag">Theme Customization</span>
+        <span class="skill-tag">Checkout Customization</span>
+        <span class="skill-tag">Store Management</span>
+      </div>
+    </div>
+    <div class="skill-group">
+        <p class="skill-group-title">Marketing & Analytics</p>
+        <div class="skill-tags">
+            <span class="skill-tag">Meta Ads (FB/IG)</span>
+            <span class="skill-tag">TikTok Ads Manager</span>
+            <span class="skill-tag">Pinterest Marketing</span>
+            <span class="skill-tag">Conversion Tracking (Pixel)</span>
+            <span class="skill-tag">GTM & GA4</span>
+            <span class="skill-tag">Ad Creatives Strategy</span>
+            <span class="skill-tag">Email Marketing (Klaviyo)</span>
+        </div>
+    </div>
+    <div class="skill-group">
+      <p class="skill-group-title">Frontend</p>
+      <div class="skill-tags">
+        <span class="skill-tag">HTML5</span>
+        <span class="skill-tag">CSS3</span>
+        <span class="skill-tag">Bootstrap</span>
+        <span class="skill-tag">jQuery</span>
+        <span class="skill-tag">JavaScript</span>
+        <span class="skill-tag">AJAX</span>
+      </div>
+    </div>
+    <div class="skill-group">
+      <p class="skill-group-title">Backend & DB</p>
+      <div class="skill-tags">
+        <span class="skill-tag">PHP</span>
+        <span class="skill-tag">MySQL</span>
+        <span class="skill-tag">WordPress</span>
+        <span class="skill-tag">API Handling</span>
+      </div>
+    </div>
+    <div class="skill-group">
+      <p class="skill-group-title">SEO & Performance</p>
+      <div class="skill-tags">
+        <span class="skill-tag">On-Page SEO</span>
+        <span class="skill-tag">Technical SEO</span>
+        <span class="skill-tag">Schema Markup</span>
+        <span class="skill-tag">Page Speed Optimization</span>
+        <span class="skill-tag">Core Web Vitals</span>
+      </div>
+    </div>
+    <div class="skill-group">
+      <p class="skill-group-title">App Integrations</p>
+      <div class="skill-tags">
+        <span class="skill-tag">Printful</span>
+        <span class="skill-tag">Printify (POD)</span>
+        <span class="skill-tag">CJ Dropshipping</span>
+        <span class="skill-tag">DSers</span>
+        <span class="skill-tag">AliExpress</span>
+      </div>
+    </div>
+    <div class="skill-group">
+      <p class="skill-group-title">Tools</p>
+      <div class="skill-tags">
+        <span class="skill-tag">Git</span>
+        <span class="skill-tag">GitHub</span>
+        <span class="skill-tag">Linux</span>
+        <span class="skill-tag">JSON</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EDUCATION -->
+<section id="education">
+  <p class="section-label">Background</p>
+  <h2 class="section-title">Education</h2>
+  <div class="edu-grid">
+    <div class="edu-card">
+      <p class="edu-degree">B.Tech in Computer Science</p>
+      <p class="edu-school">Patel College of Science and Technology<br>R.G.P.V. University · 2020–2024</p>
+      <div class="edu-meta">
+        <span class="edu-pill">SGPA: 8.06</span>
+        <span class="edu-pill">Computer Science</span>
+      </div>
+    </div>
+    <div class="edu-card">
+      <p class="edu-degree">Intermediate (12th) — Science</p>
+      <p class="edu-school">B.R.N.K.S. College, Kalyanpur, Samastipur · 2020</p>
+      <div class="edu-meta">
+        <span class="edu-pill">58%</span>
+        <span class="edu-pill">Science Stream</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="contact-wrap">
+    <div class="contact-info">
+      <h2>Let's build something great together.</h2>
+      <p>Open to freelance Shopify projects, full-time roles, and collaborations. Reach out via any of the channels below.</p>
+      <div class="contact-links">
+        <a href="mailto:anilkjhadeveloper@gmail.com" class="contact-link">
+          <span class="contact-link-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          </span>
+          anilkjhadeveloper@gmail.com
+        </a>
+        <a href="tel:+917254937090" class="contact-link">
+          <span class="contact-link-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 10a19.79 19.79 0 01-3.07-8.67A2 2 0 012 .84h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 8.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+          </span>
+          +91 72549 37090
+        </a>
+        <a href="https://www.linkedin.com/in/aniljha012/" target="_blank" class="contact-link">
+          <span class="contact-link-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+          </span>
+          linkedin.com/in/aniljha012
+        </a>
+        <a href="#" class="contact-link">
+          <span class="contact-link-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          </span>
+          Madhubani, Bihar — India
+        </a>
+      </div>
+    </div>
+    <div class="contact-card">
+      <div class="contact-avatar">AJ</div>
+      <h3>Anil Kumar Jha</h3>
+      <p class="tagline">Shopify Developer · Full-Stack</p>
+      <div class="langs">
+        <span class="lang-pill">English</span>
+        <span class="lang-pill">Hindi</span>
+        <span class="lang-pill">Maithili</span>
+        <span class="lang-pill">Bhojpuri</span>
+      </div>
+      <a href="mailto:anilkjhadeveloper@gmail.com" class="btn-primary" style="display:inline-block;">Send a message</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>© 2025 Anil Kumar Jha · Shopify Developer · <a href="mailto:anilkjhadeveloper@gmail.com">anilkjhadeveloper@gmail.com</a></p>
+</footer>
+
+</body>
+</html>
