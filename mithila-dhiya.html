@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Mithilani Dhiya — Content Creator</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Jost:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --cream: #faf7f2;
+    --blush: #f0e0d6;
+    --rose:  #c9948a;
+    --taupe: #b5a89a;
+    --dark:  #2c2420;
+    --glass: rgba(255,255,255,0.45);
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--cream);
+    color: var(--dark);
+    font-family: 'Jost', sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+  }
+
+  /* ── NOISE TEXTURE OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed; inset: 0; pointer-events: none; z-index: 9999;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    opacity: .35;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1.4rem 5%;
+    background: rgba(250,247,242,0.72);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border-bottom: 1px solid rgba(197,155,143,0.18);
+  }
+  .nav-logo {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 1.35rem;
+    color: var(--dark);
+    letter-spacing: .02em;
+  }
+  .nav-links { display: flex; gap: 2.4rem; list-style: none; }
+  .nav-links a {
+    font-size: .8rem; letter-spacing: .12em; text-transform: uppercase;
+    color: var(--taupe); text-decoration: none;
+    transition: color .3s;
+  }
+  .nav-links a:hover { color: var(--rose); }
+
+  /* ── HERO ── */
+  #hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    padding: 0 8%;
+    gap: 4rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-bg-circle {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    pointer-events: none;
+  }
+  .hero-bg-circle.c1 {
+    width: 520px; height: 520px;
+    background: radial-gradient(circle, #f2cfc4 0%, transparent 70%);
+    top: -80px; right: -80px; opacity: .6;
+  }
+  .hero-bg-circle.c2 {
+    width: 360px; height: 360px;
+    background: radial-gradient(circle, #e8d5c0 0%, transparent 70%);
+    bottom: 60px; left: -60px; opacity: .5;
+  }
+  .hero-text { position: relative; z-index: 2; animation: fadeUp .9s ease both; }
+  .hero-eyebrow {
+    font-size: .75rem; letter-spacing: .18em; text-transform: uppercase;
+    color: var(--rose); margin-bottom: 1.2rem;
+  }
+  .hero-name {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.8rem, 5vw, 4.6rem);
+    line-height: 1.08;
+    font-weight: 700;
+    color: var(--dark);
+    margin-bottom: 1.4rem;
+  }
+  .hero-name em { font-style: italic; color: var(--rose); }
+  .hero-bio {
+    font-size: 1rem; line-height: 1.8;
+    color: var(--taupe); max-width: 420px;
+    margin-bottom: 2.4rem;
+  }
+  .hero-btns { display: flex; gap: 1rem; flex-wrap: wrap; }
+  .btn-primary {
+    padding: .82rem 2.2rem;
+    background: var(--dark);
+    color: var(--cream);
+    border: none; border-radius: 50px;
+    font-family: 'Jost', sans-serif;
+    font-size: .8rem; letter-spacing: .1em; text-transform: uppercase;
+    cursor: pointer; text-decoration: none;
+    transition: background .3s, transform .2s;
+  }
+  .btn-primary:hover { background: var(--rose); transform: translateY(-2px); }
+  .btn-outline {
+    padding: .82rem 2.2rem;
+    background: transparent;
+    color: var(--dark);
+    border: 1.5px solid rgba(44,36,32,.3);
+    border-radius: 50px;
+    font-family: 'Jost', sans-serif;
+    font-size: .8rem; letter-spacing: .1em; text-transform: uppercase;
+    cursor: pointer; text-decoration: none;
+    transition: border-color .3s, color .3s, transform .2s;
+  }
+  .btn-outline:hover { border-color: var(--rose); color: var(--rose); transform: translateY(-2px); }
+
+  /* Hero image frame */
+  .hero-visual {
+    position: relative; z-index: 2;
+    animation: fadeUp .9s .2s ease both;
+  }
+  .hero-img-wrap {
+    position: relative;
+    border-radius: 40% 60% 60% 40% / 40% 40% 60% 60%;
+    overflow: hidden;
+    aspect-ratio: 4/5;
+    max-height: 72vh;
+  }
+  .hero-img-wrap img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    display: block;
+    filter: saturate(1.08);
+  }
+  .hero-badge {
+    position: absolute; bottom: 2rem; left: -2rem;
+    background: var(--glass);
+    backdrop-filter: blur(14px);
+    border: 1px solid rgba(255,255,255,.7);
+    border-radius: 20px;
+    padding: 1rem 1.4rem;
+    display: flex; align-items: center; gap: .8rem;
+    box-shadow: 0 8px 32px rgba(0,0,0,.08);
+  }
+  .badge-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem; font-weight: 700;
+    color: var(--dark);
+  }
+  .badge-label {
+    font-size: .72rem; letter-spacing: .1em;
+    text-transform: uppercase; color: var(--taupe);
+    line-height: 1.4;
+  }
+
+  /* ── SECTION COMMON ── */
+  section { padding: 7rem 8%; }
+  .section-eyebrow {
+    font-size: .72rem; letter-spacing: .18em; text-transform: uppercase;
+    color: var(--rose); margin-bottom: .8rem;
+  }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 3.5vw, 3rem);
+    font-weight: 700; line-height: 1.15;
+    color: var(--dark);
+    margin-bottom: 1.4rem;
+  }
+  .section-title em { font-style: italic; color: var(--rose); }
+  .section-sub {
+    font-size: .95rem; line-height: 1.8;
+    color: var(--taupe); max-width: 520px;
+    margin-bottom: 3.5rem;
+  }
+
+  /* ── GALLERY ── */
+  #gallery { background: #f5efea; }
+  .gallery-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 2.5rem; flex-wrap: wrap; gap: 1rem; }
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-auto-rows: 260px;
+    gap: 12px;
+  }
+  .gallery-item {
+    position: relative; overflow: hidden; border-radius: 18px;
+    cursor: pointer;
+    transition: transform .4s cubic-bezier(.23,1,.32,1);
+  }
+  .gallery-item:hover { transform: scale(1.02); }
+  .gallery-item.tall { grid-row: span 2; }
+  .gallery-item.wide { grid-column: span 2; }
+  .gallery-item img {
+    width: 100%; height: 100%;
+    object-fit: cover; display: block;
+    transition: transform .6s cubic-bezier(.23,1,.32,1);
+  }
+  .gallery-item:hover img { transform: scale(1.07); }
+  .gallery-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(to top, rgba(44,36,32,.55) 0%, transparent 55%);
+    opacity: 0; transition: opacity .4s;
+    display: flex; align-items: flex-end;
+    padding: 1.2rem;
+  }
+  .gallery-item:hover .gallery-overlay { opacity: 1; }
+  .gallery-tag {
+    font-size: .72rem; letter-spacing: .12em; text-transform: uppercase;
+    color: rgba(255,255,255,.85); border: 1px solid rgba(255,255,255,.4);
+    padding: .3rem .8rem; border-radius: 50px;
+    backdrop-filter: blur(6px);
+  }
+
+  /* Placeholder gradient images */
+  .ph { background: linear-gradient(135deg, var(--blush), var(--taupe)); }
+  .ph2 { background: linear-gradient(160deg, #e8cfc4, #c9a899); }
+  .ph3 { background: linear-gradient(140deg, #f0e4d6, #d4b5a8); }
+  .ph4 { background: linear-gradient(120deg, #e2d4c8, #bfaa9d); }
+  .ph5 { background: linear-gradient(155deg, #f5e8df, #c9b0a5); }
+
+  /* ── ABOUT ── */
+  #about {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6rem;
+    align-items: center;
+  }
+  .about-visual { position: relative; }
+  .about-img-wrap {
+    border-radius: 12px 60px 12px 60px;
+    overflow: hidden;
+    aspect-ratio: 3/4;
+    position: relative;
+  }
+  .about-img-wrap img { width:100%; height:100%; object-fit:cover; display:block; }
+  .about-deco {
+    position: absolute; top: -24px; right: -24px;
+    width: 120px; height: 120px;
+    border: 2px solid var(--rose); border-radius: 50%;
+    opacity: .35;
+  }
+  .about-deco2 {
+    position: absolute; bottom: -16px; left: -16px;
+    width: 80px; height: 80px;
+    background: var(--blush); border-radius: 50%;
+    opacity: .6;
+  }
+  .stats-row {
+    display: flex; gap: 2.5rem; margin-top: 2.5rem; flex-wrap: wrap;
+  }
+  .stat-item {}
+  .stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem; font-weight: 700;
+    color: var(--dark);
+  }
+  .stat-label {
+    font-size: .75rem; letter-spacing: .12em;
+    text-transform: uppercase; color: var(--taupe);
+  }
+
+  /* ── SERVICES / COLLAB ── */
+  #services { background: var(--dark); }
+  #services .section-eyebrow { color: var(--rose); }
+  #services .section-title { color: var(--cream); }
+  #services .section-sub { color: rgba(250,247,242,.55); }
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px,1fr));
+    gap: 1.5rem;
+  }
+  .card {
+    background: rgba(255,255,255,.05);
+    border: 1px solid rgba(255,255,255,.1);
+    border-radius: 24px;
+    padding: 2.2rem;
+    backdrop-filter: blur(8px);
+    transition: transform .3s, background .3s;
+    position: relative;
+    overflow: hidden;
+  }
+  .card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--rose), transparent);
+    opacity: 0; transition: opacity .3s;
+  }
+  .card:hover { transform: translateY(-6px); background: rgba(255,255,255,.08); }
+  .card:hover::before { opacity: 1; }
+  .card-icon {
+    font-size: 2rem; margin-bottom: 1.2rem;
+  }
+  .card-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem; font-weight: 600;
+    color: var(--cream); margin-bottom: .7rem;
+  }
+  .card-desc {
+    font-size: .88rem; line-height: 1.7;
+    color: rgba(250,247,242,.5);
+  }
+
+  /* ── CONTACT ── */
+  #contact { text-align: center; }
+  #contact .section-title { max-width: 560px; margin: 0 auto 1rem; }
+  #contact .section-sub { margin: 0 auto 3rem; }
+  .contact-links {
+    display: flex; justify-content: center;
+    gap: 1rem; flex-wrap: wrap; margin-bottom: 3.5rem;
+  }
+  .contact-link {
+    display: flex; align-items: center; gap: .6rem;
+    padding: .9rem 1.8rem;
+    background: var(--glass);
+    border: 1px solid rgba(197,155,143,.3);
+    border-radius: 50px;
+    text-decoration: none;
+    color: var(--dark);
+    font-size: .82rem; letter-spacing: .08em; text-transform: uppercase;
+    backdrop-filter: blur(10px);
+    transition: background .3s, transform .2s, box-shadow .3s;
+  }
+  .contact-link:hover {
+    background: var(--dark); color: var(--cream);
+    transform: translateY(-3px);
+    box-shadow: 0 12px 30px rgba(44,36,32,.15);
+  }
+  .contact-link svg { width: 16px; height: 16px; }
+  .email-form {
+    max-width: 480px; margin: 0 auto;
+    display: flex; gap: .8rem; flex-wrap: wrap; justify-content: center;
+  }
+  .email-input {
+    flex: 1; min-width: 220px;
+    padding: .9rem 1.4rem;
+    background: white;
+    border: 1.5px solid rgba(197,155,143,.3);
+    border-radius: 50px;
+    font-family: 'Jost', sans-serif; font-size: .9rem;
+    color: var(--dark); outline: none;
+    transition: border-color .3s;
+  }
+  .email-input:focus { border-color: var(--rose); }
+  .email-input::placeholder { color: var(--taupe); }
+
+  /* ── FOOTER ── */
+  footer {
+    padding: 2rem 8%;
+    border-top: 1px solid rgba(181,168,154,.2);
+    display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: 1rem;
+  }
+  .footer-logo {
+    font-family: 'Playfair Display', serif;
+    font-style: italic; font-size: 1.1rem;
+    color: var(--dark);
+  }
+  .footer-copy {
+    font-size: .75rem; letter-spacing: .1em;
+    color: var(--taupe); text-transform: uppercase;
+  }
+
+  /* ── DIVIDER LINE ── */
+  .line-divider {
+    display: block; width: 60px; height: 1px;
+    background: var(--rose); margin: 1.2rem 0 2rem;
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .reveal {
+    opacity: 0; transform: translateY(28px);
+    transition: opacity .7s ease, transform .7s ease;
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    #hero { grid-template-columns: 1fr; padding-top: 8rem; text-align: center; }
+    .hero-visual { order: -1; max-width: 340px; margin: 0 auto; }
+    .hero-bio { margin: 0 auto 2rem; }
+    .hero-btns { justify-content: center; }
+    #about { grid-template-columns: 1fr; }
+    .about-visual { max-width: 340px; margin: 0 auto; }
+    .gallery-grid { grid-template-columns: repeat(2, 1fr); }
+    .gallery-item.wide { grid-column: span 1; }
+  }
+  @media (max-width: 560px) {
+    nav { padding: 1.2rem 5%; }
+    .nav-links { gap: 1.4rem; }
+    section { padding: 5rem 6%; }
+    .gallery-grid { grid-template-columns: 1fr; }
+    .gallery-item.tall { grid-row: span 1; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <span class="nav-logo">Mithilani Dhiya</span>
+  <ul class="nav-links">
+    <li><a href="#gallery">Work</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#services">Collabs</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg-circle c1"></div>
+  <div class="hero-bg-circle c2"></div>
+
+  <div class="hero-text">
+    <p class="hero-eyebrow">✦ Lifestyle &amp; Aesthetic Creator</p>
+    <h1 class="hero-name">Mithilani<br/><em>Dhiya</em></h1>
+    <p class="hero-bio">
+      Curating moments that feel like poetry — fashion, lifestyle &amp; beauty content that moves, inspires &amp; connects.
+    </p>
+    <div class="hero-btns">
+      <a href="#services" class="btn-primary">Work With Me</a>
+      <a href="#gallery" class="btn-outline">View Portfolio</a>
+    </div>
+  </div>
+
+  <div class="hero-visual">
+    <div class="hero-img-wrap">
+      <!-- Replace src with actual photo -->
+      <div class="ph" style="width:100%;height:100%;"></div>
+    </div>
+    <div class="hero-badge">
+      <span class="badge-num">12K+</span>
+      <span class="badge-label">Instagram<br/>Followers</span>
+    </div>
+  </div>
+</section>
+
+<!-- GALLERY -->
+<section id="gallery">
+  <div class="gallery-header reveal">
+    <div>
+      <p class="section-eyebrow">✦ Portfolio</p>
+      <h2 class="section-title">Content <em>Gallery</em></h2>
+    </div>
+    <a href="https://www.instagram.com/mithilani_dhiya6" target="_blank" class="btn-outline">View Instagram ↗</a>
+  </div>
+
+  <div class="gallery-grid">
+    <div class="gallery-item tall reveal">
+      <div class="ph" style="width:100%;height:100%;"></div>
+      <div class="gallery-overlay"><span class="gallery-tag">Fashion</span></div>
+    </div>
+    <div class="gallery-item reveal">
+      <div class="ph2" style="width:100%;height:100%;"></div>
+      <div class="gallery-overlay"><span class="gallery-tag">Lifestyle</span></div>
+    </div>
+    <div class="gallery-item reveal">
+      <div class="ph3" style="width:100%;height:100%;"></div>
+      <div class="gallery-overlay"><span class="gallery-tag">Beauty</span></div>
+    </div>
+    <div class="gallery-item wide reveal">
+      <div class="ph4" style="width:100%;height:100%;"></div>
+      <div class="gallery-overlay"><span class="gallery-tag">Travel</span></div>
+    </div>
+    <div class="gallery-item reveal">
+      <div class="ph5" style="width:100%;height:100%;"></div>
+      <div class="gallery-overlay"><span class="gallery-tag">Aesthetic</span></div>
+    </div>
+    <div class="gallery-item tall reveal">
+      <div class="ph3" style="width:100%;height:100%;"></div>
+      <div class="gallery-overlay"><span class="gallery-tag">Outfit</span></div>
+    </div>
+    <div class="gallery-item reveal">
+      <div class="ph2" style="width:100%;height:100%;"></div>
+      <div class="gallery-overlay"><span class="gallery-tag">Skincare</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="about-visual reveal">
+    <div class="about-img-wrap">
+      <div class="ph2" style="width:100%;height:100%;"></div>
+    </div>
+    <div class="about-deco"></div>
+    <div class="about-deco2"></div>
+  </div>
+
+  <div class="reveal">
+    <p class="section-eyebrow">✦ About Me</p>
+    <h2 class="section-title">Behind the <em>Lens</em></h2>
+    <span class="line-divider"></span>
+    <p style="font-size:.95rem;line-height:1.85;color:var(--taupe);margin-bottom:1.2rem;">
+      Hi, I'm Mithilani — a lifestyle content creator passionate about authentic storytelling through visuals. From sunrise routines to curated fashion edits, every post is crafted with intention.
+    </p>
+    <p style="font-size:.95rem;line-height:1.85;color:var(--taupe);margin-bottom:2.5rem;">
+      My niche blends fashion, beauty &amp; mindful living — creating a space where aesthetics meet genuine connection. I believe great content is felt, not just seen.
+    </p>
+
+    <div class="stats-row">
+      <div class="stat-item">
+        <div class="stat-num">12K+</div>
+        <div class="stat-label">Followers</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">8.4%</div>
+        <div class="stat-label">Avg. Engagement</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">3+</div>
+        <div class="stat-label">Years Creating</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section id="services">
+  <div style="text-align:center;max-width:600px;margin:0 auto 4rem;" class="reveal">
+    <p class="section-eyebrow">✦ Collaborate</p>
+    <h2 class="section-title">Let's Create <em>Together</em></h2>
+    <p class="section-sub">Open to brand partnerships that align with an authentic, aesthetic-driven audience.</p>
+  </div>
+
+  <div class="cards-grid">
+    <div class="card reveal">
+      <div class="card-icon">🤝</div>
+      <h3 class="card-title">Brand Deals</h3>
+      <p class="card-desc">Dedicated posts, reels, stories &amp; long-term ambassador campaigns for lifestyle, fashion &amp; beauty brands.</p>
+    </div>
+    <div class="card reveal">
+      <div class="card-icon">📸</div>
+      <h3 class="card-title">Sponsored Content</h3>
+      <p class="card-desc">High-quality, on-brand content creation — photography &amp; videos that feel natural and convert.</p>
+    </div>
+    <div class="card reveal">
+      <div class="card-icon">✨</div>
+      <h3 class="card-title">Product Reviews</h3>
+      <p class="card-desc">Honest, aesthetic product reviews that build trust with an engaged &amp; loyal community.</p>
+    </div>
+    <div class="card reveal">
+      <div class="card-icon">🎯</div>
+      <h3 class="card-title">Affiliate Marketing</h3>
+      <p class="card-desc">Performance-driven collaborations with trackable links, ideal for e-commerce &amp; DTC brands.</p>
+    </div>
+  </div>
+
+  <div style="text-align:center;margin-top:3.5rem;" class="reveal">
+    <a href="#contact" class="btn-primary" style="display:inline-block;">Get in Touch →</a>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <p class="section-eyebrow reveal">✦ Let's Connect</p>
+  <h2 class="section-title reveal">Ready to <em>Collaborate?</em></h2>
+  <span class="line-divider" style="margin:0 auto 2rem;"></span>
+  <p class="section-sub reveal">Slide into my DMs or drop an email. Always open to creative conversations with aligned brands &amp; creators.</p>
+
+  <div class="contact-links reveal">
+    <a href="https://www.instagram.com/mithilani_dhiya6" target="_blank" class="contact-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+      Instagram
+    </a>
+    <a href="mailto:mithilanidhiya@gmail.com" class="contact-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+      Email Me
+    </a>
+    <a href="#" class="contact-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 2H3v16h5v4l4-4h5l4-4V2z"/></svg>
+      Collab DM
+    </a>
+  </div>
+
+  <div class="email-form reveal">
+    <input type="email" class="email-input" placeholder="your@email.com" />
+    <button class="btn-primary">Send →</button>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <span class="footer-logo">Mithilani Dhiya</span>
+  <span class="footer-copy">© 2025 · All rights reserved</span>
+  <span class="footer-copy" style="color:var(--rose);">Made with ♥</span>
+</footer>
+
+<script>
+  // Reveal on scroll
+  const reveals = document.querySelectorAll('.reveal');
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('visible'), i * 60);
+        obs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  reveals.forEach(el => obs.observe(el));
+
+  // Smooth hover parallax on hero
+  const hero = document.getElementById('hero');
+  const heroVisual = document.querySelector('.hero-visual');
+  if (hero && heroVisual) {
+    hero.addEventListener('mousemove', e => {
+      const { left, top, width, height } = hero.getBoundingClientRect();
+      const x = (e.clientX - left) / width - 0.5;
+      const y = (e.clientY - top) / height - 0.5;
+      heroVisual.style.transform = `translate(${x * 12}px, ${y * 10}px)`;
+    });
+    hero.addEventListener('mouseleave', () => {
+      heroVisual.style.transform = 'translate(0,0)';
+    });
+  }
+</script>
+</body>
+</html>
